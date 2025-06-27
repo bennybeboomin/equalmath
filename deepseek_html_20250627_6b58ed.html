@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EqualMath | Free Online Math Tutoring</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📐</text></svg>">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+    }
+    
+    html {
+      scroll-behavior: smooth;
+    }
+    
+    body {
+      background-color: #f5f7fa;
+      color: #333;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+    
+    /* Loading Animation */
+    .loader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #f5f7fa;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      transition: opacity 0.5s ease-out;
+    }
+    
+    .loader-spinner {
+      width: 50px;
+      height: 50px;
+      border: 5px solid #e2e8f0;
+      border-top: 5px solid #2b6cb0;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-bottom: 20px;
+    }
+    
+    .loader-text {
+      color: #2b6cb0;
+      font-weight: 600;
+      font-size: 1.2rem;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    /* Navigation */
+    nav {
+      background: linear-gradient(135deg, #2b6cb0 0%, #2c5282 100%);
+      padding: 1.2rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      text-align: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    nav a {
+      color: white;
+      margin: 0 1.5rem;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1.1rem;
+      transition: color 0.3s;
+      position: relative;
+      padding-bottom: 5px;
+    }
+    
+    nav a:hover {
+      color: #ebf8ff;
+    }
+    
+    nav a::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: 0;
+      left: 0;
+      background-color: #ebf8ff;
+      transition: width 0.3s;
+    }
+    
+    nav a:hover::after {
+      width: 100%;
+    }
+    
+    /* Header/Hero Section */
+    header {
+      background: linear-gradient(135deg, #2b6cb0 0%, #4299e1 100%);
+      color: #fff;
+      padding: 5rem 2rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxkZWZzPjxwYXR0ZXJuIGlkPSJwYXR0ZXJuIiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiIHBhdHRlcm5UcmFuc2Zvcm09InJvdGF0ZSg0NSkiPjxyZWN0IHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgZmlsbD0icmdiYSgyNTUsMjU1LDI1NSwwLjA1KSI+PC9yZWN0PjwvcGF0dGVybj48L2RlZnM+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsbD0idXJsKCNwYXR0ZXJuKSI+PC9yZWN0Pjwvc3ZnPg==');
+      opacity: 0.3;
+    }
+    
+    header h1 {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      position: relative;
+      animation: fadeInDown 1s ease-out;
+    }
+    
+    header p {
+      font-size: 1.5rem;
+      margin-bottom: 2rem;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+      position: relative;
+      animation: fadeInUp 1s ease-out 0.2s forwards;
+      opacity: 0;
+    }
+    
+    /* Sections */
+    section {
+      max-width: 1200px;
+      margin: 3rem auto;
+      padding: 0 2rem;
+    }
+    
+    section h2 {
+      font-size: 2.2rem;
+      color: #2b6cb0;
+      margin-bottom: 1.5rem;
+      position: relative;
+      display: inline-block;
+    }
+    
+    section h2::after {
+      content: '';
+      position: absolute;
+      width: 50%;
+      height: 4px;
+      bottom: -10px;
+      left: 0;
+      background: linear-gradient(90deg, #2b6cb0 0%, #4299e1 100%);
+      border-radius: 2px;
+    }
+    
+    /* Buttons */
+    .btn {
+      display: inline-block;
+      margin: 1rem 1rem 1rem 0;
+      padding: 0.9rem 2rem;
+      background: linear-gradient(135deg, #2b6cb0 0%, #4299e1 100%);
+      color: white;
+      border: none;
+      border-radius: 50px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1.1rem;
+      transition: all 0.3s;
+      box-shadow: 0 4px 10px rgba(43, 108, 176, 0.3);
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+    }
+    
+    .btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 15px rgba(43, 108, 176, 0.4);
+    }
+    
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #2c5282 0%, #2b6cb0 100%);
+      z-index: -1;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    
+    .btn:hover::before {
+      opacity: 1;
+    }
+    
+    .btn-outline {
+      background: transparent;
+      border: 2px solid #2b6cb0;
+      color: #2b6cb0;
+      box-shadow: none;
+    }
+    
+    .btn-outline:hover {
+      background: #2b6cb0;
+      color: white;
+    }
+    
+    /* Grid & Cards */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+    
+    .card {
+      background: white;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+      transition: transform 0.3s, box-shadow 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+    
+    .card h3 {
+      font-size: 1.5rem;
+      color: #2c5282;
+      margin-bottom: 1rem;
+      position: relative;
+      display: inline-block;
+    }
+    
+    .card h3::after {
+      content: '';
+      position: absolute;
+      width: 40px;
+      height: 3px;
+      bottom: -8px;
+      left: 0;
+      background: #4299e1;
+      border-radius: 3px;
+    }
+    
+    .card p {
+      color: #4a5568;
+    }
+    
+    .card-number {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      font-size: 3rem;
+      font-weight: 800;
+      color: rgba(66, 153, 225, 0.1);
+      z-index: 0;
+    }
+    
+    /* Testimonials */
+    .testimonial {
+      background: white;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+      margin: 2rem 0;
+      position: relative;
+    }
+    
+    .testimonial::before {
+      content: '"';
+      position: absolute;
+      top: 10px;
+      left: 20px;
+      font-size: 5rem;
+      color: rgba(66, 153, 225, 0.1);
+      font-family: serif;
+      line-height: 1;
+    }
+    
+    .testimonial-content {
+      position: relative;
+      z-index: 1;
+      font-style: italic;
+      margin-bottom: 1rem;
+    }
+    
+    .testimonial-author {
+      font-weight: 600;
+      color: #2c5282;
+      text-align: right;
+    }
+    
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 3rem 2rem;
+      background: linear-gradient(135deg, #2b6cb0 0%, #2c5282 100%);
+      color: white;
+      font-size: 1rem;
+    }
+    
+    footer p {
+      max-width: 800px;
+      margin: 0 auto 1rem;
+    }
+    
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin: 1.5rem 0;
+    }
+    
+    .footer-links a {
+      color: white;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    
+    .footer-links a:hover {
+      color: #ebf8ff;
+    }
+    
+    .social-icons {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      margin: 1.5rem 0;
+    }
+    
+    .social-icons a {
+      color: white;
+      font-size: 1.5rem;
+      transition: transform 0.3s;
+    }
+    
+    .social-icons a:hover {
+      transform: translateY(-3px);
+    }
+    
+    /* Animations */
+    @keyframes fadeInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      header {
+        padding: 3rem 1.5rem;
+      }
+      
+      header h1 {
+        font-size: 2.2rem;
+      }
+      
+      header p {
+        font-size: 1.2rem;
+      }
+      
+      nav a {
+        margin: 0 0.8rem;
+        font-size: 1rem;
+      }
+      
+      section {
+        padding: 0 1.5rem;
+      }
+      
+      .btn {
+        display: block;
+        width: 100%;
+        margin: 1rem 0;
+        text-align: center;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      nav {
+        padding: 0.8rem;
+      }
+      
+      nav a {
+        margin: 0 0.5rem;
+        font-size: 0.9rem;
+      }
+      
+      header h1 {
+        font-size: 1.8rem;
+      }
+      
+      header p {
+        font-size: 1rem;
+      }
+      
+      section h2 {
+        font-size: 1.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Loading Screen -->
+  <div class="loader">
+    <div class="loader-spinner"></div>
+    <div class="loader-text">Loading EqualMath...</div>
+  </div>
+
+  <!-- Navigation -->
+  <nav>
+    <a href="#mission">Mission</a>
+    <a href="#how-it-works">How It Works</a>
+    <a href="#testimonials">Testimonials</a>
+    <a href="#get-involved">Get Involved</a>
+    <a href="#contact">Contact</a>
+  </nav>
+
+  <!-- Hero Section -->
+  <header>
+    <h1>EqualMath</h1>
+    <p>Free, student-led math tutoring for underserved youth worldwide</p>
+    <a href="#get-involved" class="btn">Get Started Today</a>
+  </header>
+
+  <!-- Mission Section -->
+  <section id="mission">
+    <h2>Our Mission</h2>
+    <p>
+      EqualMath provides free, personalized math tutoring to students from low-income backgrounds, refugee communities, or anyone lacking access to quality math education. Our volunteer tutors are passionate high school and college students who want to make a difference.
+    </p>
+    <p>
+      We believe that every student deserves access to quality math education, regardless of their socioeconomic background. Our mission is to bridge the educational gap and empower students through mathematics.
+    </p>
+  </section>
+
+  <!-- How It Works Section -->
+  <section id="how-it-works">
+    <h2>How It Works</h2>
+    <p>Our simple 4-step process makes getting math help easy and effective:</p>
+    
+    <div class="grid">
+      <div class="card">
+        <div class="card-number">1</div>
+        <h3>Sign Up</h3>
+        <p>Students (or parents/teachers) fill out a simple sign-up form to request tutoring help. It takes less than 2 minutes!</p>
+      </div>
+      <div class="card">
+        <div class="card-number">2</div>
+        <h3>Get Matched</h3>
+        <p>We carefully match students with a qualified tutor based on their grade level, learning needs, and availability.</p>
+      </div>
+      <div class="card">
+        <div class="card-number">3</div>
+        <h3>Learn Weekly</h3>
+        <p>Students attend free weekly Zoom sessions with their tutor, receiving personalized support and mentorship.</p>
+      </div>
+      <div class="card">
+        <div class="card-number">4</div>
+        <h3>Grow and Thrive</h3>
+        <p>We track progress, offer feedback, and build student confidence in math — and beyond the classroom.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials Section -->
+  <section id="testimonials">
+    <h2>Success Stories</h2>
+    <p>Hear from students and tutors who've been part of the EqualMath journey:</p>
+    
+    <div class="testimonial">
+      <div class="testimonial-content">
+        "Before EqualMath, I was struggling with algebra and almost gave up. My tutor Sarah made math make sense and now I'm helping my classmates too!"
+      </div>
+      <div class="testimonial-author">- Maria, 9th Grade Student</div>
+    </div>
+    
+    <div class="testimonial">
+      <div class="testimonial-content">
+        "Volunteering with EqualMath has been incredibly rewarding. Seeing my student go from frustration to confidence in math is why I keep tutoring."
+      </div>
+      <div class="testimonial-author">- Jason, College Student & Tutor</div>
+    </div>
+  </section>
+
+  <!-- Get Involved Section -->
+  <section id="get-involved">
+    <h2>Get Involved</h2>
+    <p>Whether you're a student in need, a passionate tutor, or a teacher who wants to refer students — we'd love to hear from you.</p>
+    
+    <div class="grid">
+      <div class="card">
+        <h3>Students</h3>
+        <p>Get free one-on-one math help from qualified tutors. All grade levels welcome!</p>
+        <a href="https://forms.gle/your-student-form" class="btn">Sign Up for Tutoring</a>
+      </div>
+      <div class="card">
+        <h3>Tutors</h3>
+        <p>Join our team of volunteer tutors and make a difference in a student's life.</p>
+        <a href="https://forms.gle/your-tutor-form" class="btn">Become a Tutor</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section id="contact">
+    <h2>Contact Us</h2>
+    <p>Have questions? Reach out to our team — we're happy to help!</p>
+    <p>Email: <strong>equalmathorg@gmail.com</strong></p>
+    <p>Follow us on social media for updates and math tips!</p>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>Empowering young minds through mathematics</p>
+    
+    <div class="footer-links">
+      <a href="#mission">About</a>
+      <a href="#how-it-works">Program</a>
+      <a href="#get-involved">Volunteer</a>
+      <a href="#contact">Contact</a>
+    </div>
+    
+    <div class="social-icons">
+      <a href="#" aria-label="Facebook">📘</a>
+      <a href="#" aria-label="Twitter">🐦</a>
+      <a href="#" aria-label="Instagram">📷</a>
+    </div>
+    
+    <p>&copy; 2025 EqualMath. Created by student volunteers.</p>
+  </footer>
+
+  <!-- JavaScript -->
+  <script>
+    // Loading screen animation
+    window.addEventListener('load', function() {
+      const loader = document.querySelector('.loader');
+      loader.style.opacity = '0';
+      setTimeout(() => {
+        loader.style.display = 'none';
+      }, 500);
+    });
+
+    // Smooth scrolling for navigation links
+    document.querySelectorAll('nav a').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        const targetId = this.getAttribute('href');
+        const targetElement = document.querySelector(targetId);
+        
+        window.scrollTo({
+          top: targetElement.offsetTop - 80,
+          behavior: 'smooth'
+        });
+      });
+    });
+
+    // Card animation on scroll
+    const observerOptions = {
+      threshold: 0.1
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, observerOptions);
+
+    document.querySelectorAll('.card, .testimonial').forEach(card => {
+      card.style.opacity = '0';
+      card.style.transform = 'translateY(20px)';
+      card.style.transition = 'opacity 0.5s ease-out, transform 0.5s ease-out';
+      observer.observe(card);
+    });
+  </script>
+</body>
+</html>
